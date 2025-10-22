@@ -1,10 +1,40 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 export default function Register() {
+  const router = useRouter();
   return (
 	  <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-black">
       <div className="bg-white p-8 rounded-2xl shadow-md w-80">
         <h1 className="text-2xl font-semibold text-center mb-6">Inscription</h1>
-        <form className="flex flex-col gap-4">
+        <form className="flex flex-col gap-4"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            const email = e.target[0].value;
+            const password = e.target[1].value;
+            const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL.replace(/\/$/, "");
+
+            try {
+                                          const res = await fetch(`${baseUrl}/register`, {
+                                                method: "POST",
+                                                headers: {"Content-Type": "application/json"},
+                                                body: JSON.stringify({email, password}),
+                                          });
+
+                                          const data = await res.json();
+                                          if (res.ok) {
+                                      
+                                           router.push("/confirmation"); 
+                                                
+                                          } else {
+                                                alert(data.error || "Erreur de connexion");
+                                          }
+                                    } catch (error) {
+                                          console.error("Erreur :", error);
+                                          alert("Erreur lors de la connexion");
+                                    }
+                
+              }}
+        >
           
           <input
             type="email"
