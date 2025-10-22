@@ -12,6 +12,8 @@ export default function Login() {
 
                                     const email = e.target[0].value;
                                     const password = e.target[1].value;
+                                console.log(process.env.NEXT_PUBLIC_BACKEND_URL);
+                                console.log("URL du backend utilisée :", `${process.env.NEXT_PUBLIC_BACKEND_URL}/login`);
 
                                     try {
                                           const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/login`, {
