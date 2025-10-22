@@ -14,9 +14,10 @@ export default function Login() {
                                     const password = e.target[1].value;
                                 console.log(process.env.NEXT_PUBLIC_BACKEND_URL);
                                 console.log("URL du backend utilisée :", `${process.env.NEXT_PUBLIC_BACKEND_URL}/login`);
-
+                                  const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL.replace(/\/$/, "");
+                                           
                                     try {
-                                          const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}login`, {
+                                          const res = await fetch(`${baseUrl}/login`, {
                                                 method: "POST",
                                                 headers: {"Content-Type": "application/json"},
                                                 body: JSON.stringify({email, password}),
