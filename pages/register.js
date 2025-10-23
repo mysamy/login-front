@@ -9,7 +9,7 @@ export default function Register() {
         <form className="flex flex-col gap-4"
           onSubmit={async (e) => {
             e.preventDefault();
-            console.log("🟢 Formulaire soumis");
+            console.log("🟢 Formulaire soumifs");
             const email = e.target[0].value;
             const password = e.target[1].value;
             const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL.replace(/\/$/, "");
