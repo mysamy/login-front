@@ -1,11 +1,14 @@
 import Link from "next/link";
 import { useRouter } from "next/router";
 export default function Register() {
+
   const router = useRouter();
   return (
+    
 	  <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-black">
       <div className="bg-white p-8 rounded-2xl shadow-md w-80">
         <h1 className="text-2xl font-semibold text-center mb-6">Inscription</h1>
+        
         <form className="flex flex-col gap-4"
           onSubmit={async (e) => {
             e.preventDefault();
