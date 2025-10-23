@@ -12,6 +12,7 @@ export default function Register() {
             const email = e.target[0].value;
             const password = e.target[1].value;
             const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL.replace(/\/$/, "");
+            console.log("URL backend :", baseUrl);
 
             try {
                                           const res = await fetch(`${baseUrl}/register`, {
