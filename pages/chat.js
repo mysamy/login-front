@@ -1,7 +1,7 @@
 import {useState} from "react";
 
 export default function Chat() {
-      const [message, setMessages] = useState([]);
+      const [messages, setMessages] = useState([]);
       const [input, setInput] = useState("");
 
       return (
@@ -17,7 +17,7 @@ export default function Chat() {
 
                         <div className="flex-1 bg-white rounded-md shadow-inner p-4 overflow-y-auto">
                               <ul>
-                                    {message.map((msg, index) => (
+                                    {messages.map((msg, index) => (
                                           <li
                                                 key={index}
                                                 className={`max-w-xs px-3 py-2 rounded-lg ${
@@ -32,11 +32,19 @@ export default function Chat() {
 
                         <form
                               className="mt-4 flex gap-2"
-                              onSubmit={(e) => {
+                              onSubmit={async (e) => {
                                     e.preventDefault();
                                     if (!input.trim()) return; // vérifie que c’est pas vide
-                                    setMessages([...message, {from: "user", text: input}]);
+                                    setMessages([...messages, {from: "user", text: input}]);
                                     setInput("");
+                                    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/chat`, {
+                                          method: "POST",
+                                          headers: {"Content-Type": "application/json"},
+                                          body: JSON.stringify({message: input}),
+                                    });
+                                    setTimeout(() => {
+                                          setMessages((prev) => [...prev, {from: "bot", text: "Ceci est une réponse automatique 🤖"}]);
+                                    }, 1000);
                               }}
                         >
                               <input
