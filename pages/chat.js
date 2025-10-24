@@ -17,7 +17,7 @@ export default function Chat() {
 
                         <div className="flex-1 bg-white rounded-md shadow-inner p-4 overflow-y-auto">
                               <ul>
-                                    {messages.map((msg, index) => (
+                                    {message.map((msg, index) => (
                                           <li
                                                 key={index}
                                                 className={`max-w-xs px-3 py-2 rounded-lg ${
