@@ -32,7 +32,7 @@ export default function VerifyPage() {
 
         if (res.ok) {
           setMessage("✅ Email vérifié avec succès !");
-          setTimeout(() => router.push("/login"), 2000);
+          setTimeout(() => router.push("/index"), 2000);
         } else {
           setMessage(`❌ ${data.error || "Lien invalide ou expiré"}`);
         }
