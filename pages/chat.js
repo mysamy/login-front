@@ -20,14 +20,15 @@ export default function Chat() {
                         <h2 className="text-xl font-semibold mb-4 text-center">Conversation avec {"l'IA"}</h2>
 
                         <div className="flex-1 bg-white rounded-md shadow-inner p-4 overflow-y-auto">
-                              <ul>
+                              <ul className="flex">
                                     {messages.map((msg, index) => (
                                           <li
                                                 key={index}
-                                                className={`max-w-xs px-3 py-2 rounded-lg ${
+                                                className={`max-width:65ch line-height:1.5 max-w-xs px-3 py-2 rounded-lg ${
                                                       msg.from === "user" ? "self-end bg-blue-500 text-white" : "self-start bg-gray-200 text-black"
                                                 }`}
                                           >
+                                                Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dignissimos inventore quis blanditiis recusandae consequatur aperiam ipsam reprehenderit, repudiandae facilis distinctio architecto eaque molestiae quaerat perspiciatis repellat accusamus nesciunt similique deleniti?
                                                 {msg.text}
                                           </li>
                                     ))}
