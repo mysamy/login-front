@@ -3,7 +3,11 @@ import {useState} from "react";
 export default function Chat() {
       const [messages, setMessages] = useState([]);
       const [input, setInput] = useState("");
-
+      const [token, setToken] = useState(null);
+      useEffect(() => {
+            const savedToken = localStorage.getItem("token");
+            setToken(savedToken); // met à jour le state une fois le composant monté
+      }, []);
       return (
             <main className="flex min-h-screen bg-gray-100 text-black">
                   <section className="w-1/3 border-r border-gray-300 p-4 bg-white">
@@ -41,7 +45,7 @@ export default function Chat() {
                                           method: "POST",
                                           headers: {
                                                 "Content-Type": "application/json",
-                                                "Authorization": `Bearer ${token}`,
+                                                Authorization: `Bearer ${token}`,
                                           },
                                           body: JSON.stringify({message: input}),
                                     });
