@@ -39,7 +39,10 @@ export default function Chat() {
                                     setInput("");
                                     const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/chat`, {
                                           method: "POST",
-                                          headers: {"Content-Type": "application/json"},
+                                          headers: {
+                                                "Content-Type": "application/json",
+                                                "Authorization": `Bearer ${token}`,
+                                          },
                                           body: JSON.stringify({message: input}),
                                     });
                                     const data = await res.json();
