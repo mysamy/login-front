@@ -45,6 +45,7 @@ export default function Chat() {
                                     const data = await res.json();
 
                                     // Ajoute la réponse du bot
+                                    console.log("Réponse IA :", data.reply);
                                     setMessages((prev) => [...prev, {from: "bot", text: data.reply}]);
                               }}
                         >
