@@ -42,9 +42,10 @@ export default function Chat() {
                                           headers: {"Content-Type": "application/json"},
                                           body: JSON.stringify({message: input}),
                                     });
-                                    setTimeout(() => {
-                                          setMessages((prev) => [...prev, {from: "bot", text: "Ceci est une réponse automatique 🤖"}]);
-                                    }, 1000);
+                                    const data = await res.json();
+
+                                    // Ajoute la réponse du bot
+                                    setMessages((prev) => [...prev, {from: "bot", text: data.reply}]);
                               }}
                         >
                               <input
