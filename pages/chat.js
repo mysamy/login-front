@@ -23,7 +23,7 @@ export default function Chat() {
 
                         <h2 className="text-xl font-semibold mb-4 text-center">Historique</h2>
 
-                        <div className="flex-1 bg-white rounded-md shadow-inner p-4 overflow-y-auto">
+                        <div className="flex-1 bg-white rounded-md shadow-inner p-4 overflow-y-auto flex flex-col">
                               <ul className="flex flex-1 flex-col gap-1">
                                     {messages
                                           .filter((msg) => msg.from === "user")
@@ -39,8 +39,8 @@ export default function Chat() {
                   <section className="flex-1 p-6 flex flex-col">
                         <h2 className="text-xl font-semibold mb-4 text-center">Conversation avec {"l'IA"}</h2>
 
-                        <div className="flex-1 bg-white rounded-md shadow-inner p-4 overflow-y-auto">
-                              <ul className="flex-1 flex-col">
+                        <div className="flex flex-col flex-1 bg-white rounded-md shadow-inner p-4 overflow-y-auto">
+                              <ul className="flex flex-1 flex-col">
                                     {messages.map((msg, index) => (
                                           <li
                                                 key={index}
