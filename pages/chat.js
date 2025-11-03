@@ -44,13 +44,15 @@ export default function Chat() {
                                     {messages.map((msg, index) => (
                                           <li
                                                 key={index}
-                                                className={`w-3/4 line-height:1.5 px-3 py-2 rounded-lg ${
-                                                      msg.from === "user" ? "self-end bg-blue-500 text-white" : "self-start bg-gray-200 text-black"
+                                                className={`w-auto line-height:1.5 px-3 py-2 rounded-lg ${
+                                                      msg.from === "user" ? "self-start bg-blue-500 text-white" : "self-end bg-gray-200 text-black"
                                                 }`}
                                           >
                                                 {msg.text}
                                           </li>
+                                           
                                     ))}
+                        
                               </ul>
                         </div>
 
