@@ -25,7 +25,28 @@ export default function Chat() {
                   .catch(console.error);
       }, [token]);
       console.log(data);
+      async function handleSend(e) {async (e) => {
+                                    e.preventDefault();
+                                    if (!input.trim()) return; // vérifie que c’est pas vide
+                                    setMessages([...messages, {from: "user", text: input}]);
+                                    setInput("");
+                                    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/chat`, {
+                                          method: "POST",
+                                          headers: {
+                                                "Content-Type": "application/json",
+                                                Authorization: `Bearer ${token}`,
+                                          },
+                                          body: JSON.stringify({
+                                                message: input,
+                                                conversationId,
+                                          }),
+                                    });
+                                    const data = await res.json();
 
+                                    // Ajoute la réponse du bot
+                                    console.log("Réponse IA :", data.reply);
+                                    setMessages((prev) => [...prev, {from: "bot", text: data.reply}]);
+                              }}
       return (
             <main className="flex min-h-screen bg-gray-100 text-black">
                   <aside className="w-1/6 border-r border-gray-300 p-4 bg-white">
@@ -81,28 +102,7 @@ export default function Chat() {
 
                         <form
                               className="mt-4 flex gap-2"
-                              onSubmit={async (e) => {
-                                    e.preventDefault();
-                                    if (!input.trim()) return; // vérifie que c’est pas vide
-                                    setMessages([...messages, {from: "user", text: input}]);
-                                    setInput("");
-                                    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/chat`, {
-                                          method: "POST",
-                                          headers: {
-                                                "Content-Type": "application/json",
-                                                Authorization: `Bearer ${token}`,
-                                          },
-                                          body: JSON.stringify({
-                                                message: input,
-                                                conversationId,
-                                          }),
-                                    });
-                                    const data = await res.json();
-
-                                    // Ajoute la réponse du bot
-                                    console.log("Réponse IA :", data.reply);
-                                    setMessages((prev) => [...prev, {from: "bot", text: data.reply}]);
-                              }}
+                              onSubmit= {handleSend}
                         >
                               <input
                                     value={input}
