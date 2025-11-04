@@ -46,7 +46,13 @@ export default function Chat() {
             // Ajoute la réponse du bot
             console.log("Réponse IA :", data.reply);
             setMessages((prev) => [...prev, {role: "assistant", text: data.reply}]);
+            const newHistory = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/history`, {
+                  headers: {Authorization: `Bearer ${token}`},
+            }).then((res) => res.json());
+
+            setHistory(newHistory);
       }
+
       async function chargerConversation(id) {
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/conversation/${id}`, {
                   headers: {Authorization: `Bearer ${token}`},
