@@ -45,7 +45,9 @@ export default function Chat() {
                                           <li
                                                 key={index}
                                                 className={`w-auto line-height:1.5 px-3 py-2 rounded-lg ${
-                                                      msg.from === "user" ? "self-start bg-blue-500 text-white" : "self-end bg-gray-200 text-black"
+                                                      msg.from === "user" ?
+                                                      "self-start bg-blue-500 text-white"
+                                                      : "self-end bg-gray-200 text-black"
                                                 }`}
                                           >
                                                 {msg.text}
