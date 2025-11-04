@@ -4,19 +4,37 @@ export default function Chat() {
       const [messages, setMessages] = useState([]);
       const [input, setInput] = useState("");
       const [token, setToken] = useState(null);
+      const [history, setHistory] = useState([]);
       const [conversationId, setConversationId] = useState(() => crypto.randomUUID());
+
       useEffect(() => {
             //apres que la page s'affiche fais ca
             const savedToken = localStorage.getItem("token");
+            if (!savedToken) return;
             setToken(savedToken); // met à jour le state une fois le composant monté
       }, []); //une fois []
+      useEffect(() => {
+            if (!token) return;
+            fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/conversation`, {
+                  headers: {Authorization: `Bearer ${token}`},
+            })
+                  .then((res) => res.json())
+                  .then((data) => {
+                        setHistory(data);
+                  })
+                  .catch(console.error);
+      }, [token]);
+      console.log(data);
+
       return (
             <main className="flex min-h-screen bg-gray-100 text-black">
                   <aside className="w-1/6 border-r border-gray-300 p-4 bg-white">
-                        <button className="w-full mb-3 px-3 py-2 bg-blue-600 text-white rounded" onClick={() => {
-    setConversationId(crypto.randomUUID());
-    setMessages([]);
-                        }}
+                        <button
+                              className="w-full mb-3 px-3 py-2 bg-blue-600 text-white rounded"
+                              onClick={() => {
+                                    setConversationId(crypto.randomUUID());
+                                    setMessages([]);
+                              }}
                         >
                               Nouvelle conversation
                         </button>
@@ -24,14 +42,21 @@ export default function Chat() {
                         <h2 className="text-xl font-semibold mb-4 text-center">Historique</h2>
 
                         <div className="flex-1 bg-white rounded-md shadow-inner p-4 overflow-y-auto flex flex-col">
-                              <ul className="flex flex-1 flex-col gap-1">
-                                    {messages
-                                          .filter((msg) => msg.from === "user")
-                                          .map((msg, index) => (
-                                                <li key={index} className={"bg-gray-100 $"}>
-                                                      <a className="block  truncate">{msg.text}</a>
-                                                </li>
-                                          ))}
+                              <ul className="flex flex-1 flex-col gap-0.5">
+                                    {history.map((item) => (
+                                          <li key={item.conversationId}>
+                                                <a
+                                                      href="#"
+                                                      onClick={() => {
+                                                            setConversationId(item.conversationId);
+                                                            chargerConversation(item.conversationId);
+                                                      }}
+                                                      className="block truncate text-blue-600 hover:underline"
+                                                >
+                                                      {item.title}
+                                                </a>
+                                          </li>
+                                    ))}
                               </ul>
                         </div>
                   </aside>
@@ -44,17 +69,13 @@ export default function Chat() {
                                     {messages.map((msg, index) => (
                                           <li
                                                 key={index}
-                                                className={`w-auto line-height:1.5 px-3 py-2 rounded-lg ${
-                                                      msg.from === "user" ?
-                                                      "self-start bg-blue-500 text-white"
-                                                      : "self-end bg-gray-200 text-black"
+                                                className={`w-auto line-height-[1.5] px-3 py-2 rounded-lg ${
+                                                      msg.from === "user" ? "self-start bg-blue-500 text-white" : "self-end bg-gray-200 text-black"
                                                 }`}
                                           >
                                                 {msg.text}
                                           </li>
-                                           
                                     ))}
-                        
                               </ul>
                         </div>
 
