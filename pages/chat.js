@@ -15,7 +15,7 @@ export default function Chat() {
       }, []); //une fois []
       useEffect(() => {
             if (!token) return;
-            fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/conversation`, {
+            fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/history`, {
                   headers: {Authorization: `Bearer ${token}`},
             })
                   .then((res) => res.json())
@@ -24,29 +24,37 @@ export default function Chat() {
                   })
                   .catch(console.error);
       }, [token]);
-      console.log(data);
-      async function handleSend(e) {async (e) => {
-                                    e.preventDefault();
-                                    if (!input.trim()) return; // vérifie que c’est pas vide
-                                    setMessages([...messages, {from: "user", text: input}]);
-                                    setInput("");
-                                    const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/chat`, {
-                                          method: "POST",
-                                          headers: {
-                                                "Content-Type": "application/json",
-                                                Authorization: `Bearer ${token}`,
-                                          },
-                                          body: JSON.stringify({
-                                                message: input,
-                                                conversationId,
-                                          }),
-                                    });
-                                    const data = await res.json();
 
-                                    // Ajoute la réponse du bot
-                                    console.log("Réponse IA :", data.reply);
-                                    setMessages((prev) => [...prev, {from: "bot", text: data.reply}]);
-                              }}
+      async function handleSend(e) {
+            e.preventDefault();
+            if (!input.trim()) return; // vérifie que c’est pas vide
+            setMessages([...messages, {role: "user", text: input}]);
+            setInput("");
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/chat`, {
+                  method: "POST",
+                  headers: {
+                        "Content-Type": "application/json",
+                        Authorization: `Bearer ${token}`,
+                  },
+                  body: JSON.stringify({
+                        message: input,
+                        conversationId,
+                  }),
+            });
+            const data = await res.json();
+
+            // Ajoute la réponse du bot
+            console.log("Réponse IA :", data.reply);
+            setMessages((prev) => [...prev, {role: "assistant", text: data.reply}]);
+      }
+      async function chargerConversation(id) {
+            const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/conversation/${id}`, {
+                  headers: {Authorization: `Bearer ${token}`},
+            });
+
+            const data = await res.json();
+            setMessages(data); // important: on remplace, on n'ajoute pas
+      }
       return (
             <main className="flex min-h-screen bg-gray-100 text-black">
                   <aside className="w-1/6 border-r border-gray-300 p-4 bg-white">
@@ -91,7 +99,7 @@ export default function Chat() {
                                           <li
                                                 key={index}
                                                 className={`w-auto line-height-[1.5] px-3 py-2 rounded-lg ${
-                                                      msg.from === "user" ? "self-start bg-blue-500 text-white" : "self-end bg-gray-200 text-black"
+                                                      msg.role === "user" ? "self-start bg-blue-500 text-white" : "self-end bg-gray-200 text-black"
                                                 }`}
                                           >
                                                 {msg.text}
@@ -100,10 +108,7 @@ export default function Chat() {
                               </ul>
                         </div>
 
-                        <form
-                              className="mt-4 flex gap-2"
-                              onSubmit= {handleSend}
-                        >
+                        <form className="mt-4 flex gap-2" onSubmit={handleSend}>
                               <input
                                     value={input}
                                     type="text"
