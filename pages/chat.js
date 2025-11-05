@@ -1,4 +1,5 @@
-import {useState, useEffect} from "react";
+import {useState, useEffect, Fragment} from "react";
+import { useRouter } from "next/router";
 
 export default function Chat() {
       const [messages, setMessages] = useState([]);
@@ -6,12 +7,14 @@ export default function Chat() {
       const [token, setToken] = useState(null);
       const [history, setHistory] = useState([]);
       const [conversationId, setConversationId] = useState(() => crypto.randomUUID());
-
+      const router = useRouter();
       useEffect(() => {
             //apres que la page s'affiche fais ca
             const savedToken = localStorage.getItem("token");
-            if (!savedToken) return;
-
+            if (!savedToken) {
+                  router.push("/login"); // redirige vers login
+                  return;
+            }
             setToken(savedToken); // met à jour le state une fois le composant monté
       }, []); //une fois []
       useEffect(() => {
@@ -29,21 +32,20 @@ export default function Chat() {
       function shouldShowDate(messages, index) {
             if (index === 0) return true;
 
-            const d1 = messages[index]?.createdAt;
-            const d2 = messages[index - 1]?.createdAt;
-
-            console.log("🕓 Compare dates:", {
-                  index,
-                  current: d1,
-                  prev: d2,
-            });
-
-            return new Date(d1).toDateString() !== new Date(d2).toDateString();
+            return new Date(messages[index]?.createdAt).toDateString() !== new Date(messages[index - 1]?.createdAt).toDateString();
       }
       async function handleSend(e) {
             e.preventDefault();
             if (!input.trim()) return; // vérifie que c’est pas vide
-            setMessages([...messages, {role: "user", text: input, createdAt: new Date().toISOString()}]);
+            setMessages([
+                  ...messages,
+                  {
+                        id: crypto.randomUUID(), 
+                        role: "user",
+                        text: input,
+                        createdAt: new Date().toISOString(),
+                  },
+            ]);
             setInput("");
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/chat`, {
                   method: "POST",
@@ -60,7 +62,15 @@ export default function Chat() {
 
             // Ajoute la réponse du bot
 
-            setMessages((prev) => [...prev, {role: "assistant", text: data.reply, createdAt: new Date().toISOString()}]);
+            setMessages((prev) => [
+                  ...prev,
+                  {
+                  id: crypto.randomUUID(),
+                  role: "assistant",
+                  text: data.reply,
+                  createdAt: new Date().toISOString()
+                  }
+            ]);
             const newHistory = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/history`, {
                   headers: {Authorization: `Bearer ${token}`},
             }).then((res) => res.json());
@@ -97,8 +107,7 @@ export default function Chat() {
                                           const active = item.conversationId === conversationId;
                                           return (
                                                 <li key={item.conversationId}>
-                                                      <a
-                                                            href="#"
+                                                      <button
                                                             onClick={() => {
                                                                   setConversationId(item.conversationId);
                                                                   chargerConversation(item.conversationId);
@@ -108,7 +117,7 @@ export default function Chat() {
           `}
                                                       >
                                                             {item.title}
-                                                      </a>
+                                                      </button>
                                                 </li>
                                           );
                                     })}
@@ -122,7 +131,7 @@ export default function Chat() {
                         <div className="flex flex-col flex-1 bg-[#EBE9E9] rounded-md shadow-inner p-4 overflow-y-auto">
                               <ul className="flex flex-1 flex-col gap-6">
                                     {messages.map((msg, index) => (
-                                          <>
+                                          <Fragment key={msg.id}>
                                                 {msg.createdAt && shouldShowDate(messages, index) && (
                                                       <div className="flex items-center my-4 text-xs text-black">
                                                             <div className="flex-1 border-t border-black"></div>
@@ -143,7 +152,7 @@ export default function Chat() {
                                                             {new Date(msg.createdAt).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})}
                                                       </div>
                                                 </li>
-                                          </>
+                                          </Fragment>
                                     ))}
                               </ul>
                         </div>
