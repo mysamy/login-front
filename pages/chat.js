@@ -11,12 +11,12 @@ export default function Chat() {
             //apres que la page s'affiche fais ca
             const savedToken = localStorage.getItem("token");
             if (!savedToken) return;
-            console.log("✅ Token trouvé:", savedToken);
+
             setToken(savedToken); // met à jour le state une fois le composant monté
       }, []); //une fois []
       useEffect(() => {
             if (!token) return;
-            console.log("📡 Chargement historique avec token:", token);
+
             fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/history`, {
                   headers: {Authorization: `Bearer ${token}`},
             })
@@ -27,19 +27,19 @@ export default function Chat() {
                   .catch(console.error);
       }, [token]);
       function shouldShowDate(messages, index) {
-    if (index === 0) return true;
+            if (index === 0) return true;
 
-    const d1 = messages[index]?.createdAt;
-    const d2 = messages[index - 1]?.createdAt;
+            const d1 = messages[index]?.createdAt;
+            const d2 = messages[index - 1]?.createdAt;
 
-    console.log("🕓 Compare dates:", {
-      index,
-      current: d1,
-      prev: d2,
-    });
+            console.log("🕓 Compare dates:", {
+                  index,
+                  current: d1,
+                  prev: d2,
+            });
 
-    return new Date(d1).toDateString() !== new Date(d2).toDateString();
-  }
+            return new Date(d1).toDateString() !== new Date(d2).toDateString();
+      }
       async function handleSend(e) {
             e.preventDefault();
             if (!input.trim()) return; // vérifie que c’est pas vide
@@ -59,7 +59,7 @@ export default function Chat() {
             const data = await res.json();
 
             // Ajoute la réponse du bot
-            console.log("Réponse IA :", data.reply);
+
             setMessages((prev) => [...prev, {role: "assistant", text: data.reply}]);
             const newHistory = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/history`, {
                   headers: {Authorization: `Bearer ${token}`},
@@ -118,7 +118,7 @@ export default function Chat() {
                               <ul className="flex flex-1 flex-col gap-5">
                                     {messages.map((msg, index) => (
                                           <>
-                                                {shouldShowDate(messages, index) && (
+                                                {msg.createdAt && shouldShowDate(messages, index) && (
                                                       <div className="flex items-center my-4 text-xs text-gray-300">
                                                             <div className="flex-1 border-t border-gray-500"></div>
                                                             <span className="px-2">{new Date(msg.createdAt).toDateString()}</span>
@@ -135,7 +135,12 @@ export default function Chat() {
                                                 >
                                                       {msg.text}
                                                       <div className="text-xs opacity-60 mt-1 text-right">
-                                                            {new Date(msg.createdAt).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})}
+                                                            {msg.createdAt
+                                                                  ? new Date(msg.createdAt).toLocaleTimeString([], {
+                                                                          hour: "2-digit",
+                                                                          minute: "2-digit",
+                                                                    })
+                                                                  : ""}
                                                       </div>
                                                 </li>
                                           </>
@@ -162,4 +167,3 @@ export default function Chat() {
             </main>
       );
 }
-
