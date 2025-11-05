@@ -104,7 +104,7 @@ export default function Chat() {
                                                                   chargerConversation(item.conversationId);
                                                             }}
                                                             className={`block w-full px-2 py-1 rounded-md truncate transition duration-100
-            ${active ? "bg-[#3EE4F0] text-black font-semibold shadow-md" : "text-[#3EE4F0] hover:bg-[#233444] hover:text-white"}
+            ${active ? "bg-[#3EE4F0] text-black font-semibold shadow-md" : "text-black hover:bg-[#233444] hover:text-white"}
           `}
                                                       >
                                                             {item.title}
@@ -120,7 +120,7 @@ export default function Chat() {
                         <h2 className="text-xl font-semibold mb-4 text-center">Conversation avec {"l'IA"}</h2>
 
                         <div className="flex flex-col flex-1 bg-[#EBE9E9] rounded-md shadow-inner p-4 overflow-y-auto">
-                              <ul className="flex flex-1 flex-col gap-5">
+                              <ul className="flex flex-1 flex-col gap-6">
                                     {messages.map((msg, index) => (
                                           <>
                                                 {msg.createdAt && shouldShowDate(messages, index) && (
@@ -132,14 +132,14 @@ export default function Chat() {
                                                 )}
 
                                                 <li
-                                                      className={`w-auto line-height-[1.5] px-3 max-w-[75%] py-2 rounded-lg ${
+                                                      className={`w-auto line-height-[1.5] px-5 max-w-[75%] py-2 rounded-lg ${
                                                             msg.role === "user"
                                                                   ? "self-start bg-[#1FB7C4] text-white"
                                                                   : "self-end bg-[#14202E] text-white"
                                                       }`}
                                                 >
                                                       {msg.text}
-                                                      <div className="text-xs opacity-60 mt-1 text-right">
+                                                      <div className="text-xs opacity-60 text-right">
                                                             {new Date(msg.createdAt).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})}
                                                       </div>
                                                 </li>
