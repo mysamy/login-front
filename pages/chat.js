@@ -6,10 +6,7 @@ export default function Chat() {
       const [token, setToken] = useState(null);
       const [history, setHistory] = useState([]);
       const [conversationId, setConversationId] = useState(() => crypto.randomUUID());
-      const currDate = new Date(msg.createdAt).toDateString();
-      const prevDate = index > 0 ? new Date(messages[index - 1].createdAt).toDateString() : null;
 
-      const showDate = currDate !== prevDate;
       useEffect(() => {
             //apres que la page s'affiche fais ca
             const savedToken = localStorage.getItem("token");
@@ -27,7 +24,10 @@ export default function Chat() {
                   })
                   .catch(console.error);
       }, [token]);
-
+      function shouldShowDate(messages, index) {
+            if (index === 0) return true;
+            return new Date(messages[index].createdAt).toDateString() !== new Date(messages[index - 1].createdAt).toDateString();
+      }
       async function handleSend(e) {
             e.preventDefault();
             if (!input.trim()) return; // vérifie que c’est pas vide
@@ -104,42 +104,30 @@ export default function Chat() {
 
                         <div className="flex flex-col flex-1 bg-[#EBE9E9] rounded-md shadow-inner p-4 overflow-y-auto">
                               <ul className="flex flex-1 flex-col gap-5">
-                                    {showDate && (
-                                          <div className="flex items-center my-4 text-xs text-gray-300">
-                                                <div className="flex-1 border-t border-gray-500"></div>
-                                                <span className="px-2">{currDate}</span>
-                                                <div className="flex-1 border-t border-gray-500"></div>
-                                          </div>
-                                    )}
                                     {messages.map((msg, index) => (
-                                          <li
-                                                key={index} //changer index pour un id pour chaque message peut etre
-                                                className={`w-auto line-height-[1.5] px-3 max-w-[75%] py-2 rounded-lg ${
-                                                      msg.role === "user" ? "self-start bg-[#1FB7C4] text-white" : "self-end bg-[#14202E] text-black "
-                                                }`}
-                                          >
-                                                {msg.text}
-                                                <div className="text-xs opacity-60 mt-1 text-right">
-                                                      {new Date(msg.createdAt).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})}
-                                                </div>
-                                          </li>
+                                          <React.Fragment key={msg.createdAt}>
+                                                {shouldShowDate(messages, index) && (
+                                                      <div className="flex items-center my-4 text-xs text-gray-300">
+                                                            <div className="flex-1 border-t border-gray-500"></div>
+                                                            <span className="px-2">{new Date(msg.createdAt).toDateString()}</span>
+                                                            <div className="flex-1 border-t border-gray-500"></div>
+                                                      </div>
+                                                )}
+
+                                                <li
+                                                      className={`w-auto line-height-[1.5] px-3 max-w-[75%] py-2 rounded-lg ${
+                                                            msg.role === "user"
+                                                                  ? "self-start bg-[#1FB7C4] text-white"
+                                                                  : "self-end bg-[#14202E] text-white"
+                                                      }`}
+                                                >
+                                                      {msg.text}
+                                                      <div className="text-xs opacity-60 mt-1 text-right">
+                                                            {new Date(msg.createdAt).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})}
+                                                      </div>
+                                                </li>
+                                          </React.Fragment>
                                     ))}
-                                    <li className="w-auto  line-height-[1.5] max-w-[75%] px-5 py-3 rounded-lg self-start bg-[#1FB7C4] text-white">
-                                          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas sapiente velit autem quod aliquid debitis
-                                          temporibus cum rerum, voluptate veritatis quisquam et? Repellendus cum dolores soluta tenetur nihil
-                                          repudiandae non!
-                                          <div class="text-xs opacity-60 mt-1 text-right">14:32</div>
-                                    </li>
-                                    <li className="w-auto line-height-[1.5] max-w-[75%] px-5 py-2 rounded-lg self-end bg-[#14202E] text-white">
-                                          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas sapiente velit autem quod aliquid debitis
-                                          temporibus cum rerum, voluptate veritatis quisquam et? Repellendus cum dolores soluta tenetur nihil
-                                          repudiandae non!
-                                    </li>
-                                    <div class="flex items-center my-4 text-xs text-gray-400">
-                                          <div class="flex-1 border-t border-gray-500"></div>
-                                          <span class="px-2">4 Nov 2025</span>
-                                          <div class="flex-1 border-t border-gray-500"></div>
-                                    </div>
                               </ul>
                         </div>
 
@@ -162,3 +150,20 @@ export default function Chat() {
             </main>
       );
 }
+
+//   <li className="w-auto  line-height-[1.5] max-w-[75%] px-5 py-3 rounded-lg self-start bg-[#1FB7C4] text-white">
+//                                           Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas sapiente velit autem quod aliquid debitis
+//                                           temporibus cum rerum, voluptate veritatis quisquam et? Repellendus cum dolores soluta tenetur nihil
+//                                           repudiandae non!
+//                                           <div class="text-xs opacity-60 mt-1 text-right">14:32</div>
+//                                     </li>
+//                                     <li className="w-auto line-height-[1.5] max-w-[75%] px-5 py-2 rounded-lg self-end bg-[#14202E] text-white">
+//                                           Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas sapiente velit autem quod aliquid debitis
+//                                           temporibus cum rerum, voluptate veritatis quisquam et? Repellendus cum dolores soluta tenetur nihil
+//                                           repudiandae non!
+//                                     </li>
+//                                     <div class="flex items-center my-4 text-xs text-gray-400">
+//                                           <div class="flex-1 border-t border-gray-500"></div>
+//                                           <span class="px-2">4 Nov 2025</span>
+//                                           <div class="flex-1 border-t border-gray-500"></div>
+//                                     </div>
