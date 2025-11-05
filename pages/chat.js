@@ -11,10 +11,12 @@ export default function Chat() {
             //apres que la page s'affiche fais ca
             const savedToken = localStorage.getItem("token");
             if (!savedToken) return;
+            console.log("✅ Token trouvé:", savedToken);
             setToken(savedToken); // met à jour le state une fois le composant monté
       }, []); //une fois []
       useEffect(() => {
             if (!token) return;
+            console.log("📡 Chargement historique avec token:", token);
             fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/history`, {
                   headers: {Authorization: `Bearer ${token}`},
             })
@@ -25,9 +27,19 @@ export default function Chat() {
                   .catch(console.error);
       }, [token]);
       function shouldShowDate(messages, index) {
-            if (index === 0) return true;
-            return new Date(messages[index].createdAt).toDateString() !== new Date(messages[index - 1].createdAt).toDateString();
-      }
+    if (index === 0) return true;
+
+    const d1 = messages[index]?.createdAt;
+    const d2 = messages[index - 1]?.createdAt;
+
+    console.log("🕓 Compare dates:", {
+      index,
+      current: d1,
+      prev: d2,
+    });
+
+    return new Date(d1).toDateString() !== new Date(d2).toDateString();
+  }
       async function handleSend(e) {
             e.preventDefault();
             if (!input.trim()) return; // vérifie que c’est pas vide
@@ -151,19 +163,3 @@ export default function Chat() {
       );
 }
 
-//   <li className="w-auto  line-height-[1.5] max-w-[75%] px-5 py-3 rounded-lg self-start bg-[#1FB7C4] text-white">
-//                                           Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas sapiente velit autem quod aliquid debitis
-//                                           temporibus cum rerum, voluptate veritatis quisquam et? Repellendus cum dolores soluta tenetur nihil
-//                                           repudiandae non!
-//                                           <div class="text-xs opacity-60 mt-1 text-right">14:32</div>
-//                                     </li>
-//                                     <li className="w-auto line-height-[1.5] max-w-[75%] px-5 py-2 rounded-lg self-end bg-[#14202E] text-white">
-//                                           Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas sapiente velit autem quod aliquid debitis
-//                                           temporibus cum rerum, voluptate veritatis quisquam et? Repellendus cum dolores soluta tenetur nihil
-//                                           repudiandae non!
-//                                     </li>
-//                                     <div class="flex items-center my-4 text-xs text-gray-400">
-//                                           <div class="flex-1 border-t border-gray-500"></div>
-//                                           <span class="px-2">4 Nov 2025</span>
-//                                           <div class="flex-1 border-t border-gray-500"></div>
-//                                     </div>
