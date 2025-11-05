@@ -43,7 +43,7 @@ export default function Chat() {
       async function handleSend(e) {
             e.preventDefault();
             if (!input.trim()) return; // vérifie que c’est pas vide
-            setMessages([...messages, {role: "user", text: input}]);
+            setMessages([...messages, {role: "user", text: input, createdAt: new Date().toISOString()}]);
             setInput("");
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/chat`, {
                   method: "POST",
@@ -60,7 +60,7 @@ export default function Chat() {
 
             // Ajoute la réponse du bot
 
-            setMessages((prev) => [...prev, {role: "assistant", text: data.reply}]);
+            setMessages((prev) => [...prev, {role: "assistant", text: data.reply, createdAt: new Date().toISOString()}]);
             const newHistory = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/history`, {
                   headers: {Authorization: `Bearer ${token}`},
             }).then((res) => res.json());
