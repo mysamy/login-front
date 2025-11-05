@@ -135,12 +135,7 @@ export default function Chat() {
                                                 >
                                                       {msg.text}
                                                       <div className="text-xs opacity-60 mt-1 text-right">
-                                                            {msg.createdAt
-                                                                  ? new Date(msg.createdAt).toLocaleTimeString([], {
-                                                                          hour: "2-digit",
-                                                                          minute: "2-digit",
-                                                                    })
-                                                                  : ""}
+                                                            {new Date(msg.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
                                                       </div>
                                                 </li>
                                           </>
