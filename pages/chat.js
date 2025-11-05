@@ -80,7 +80,7 @@ export default function Chat() {
             <main className="flex min-h-screen bg-[#1A2A3A] text-white">
                   <aside className="flex flex-col w-1/6  p-4 bg-[#1A2A3A]">
                         <button
-                              className="rounded-full text-lg font-bold my-2 px-[8px] py-[15px] bg-[#3EE4F0] text-black border-2 border-[#3EE4F0] hover:bg-[#1A2A3A] hover:text-[#3EE4F0] transition-all duration-300"
+                              className="rounded-full text-sm font-bold my-2 px-[8px] py-[15px] bg-[#3EE4F0] text-black border-2 border-[#3EE4F0] hover:bg-[#1A2A3A] hover:text-[#3EE4F0] transition-all duration-300"
                               onClick={() => {
                                     setConversationId(crypto.randomUUID());
                                     setMessages([]);
