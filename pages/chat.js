@@ -112,7 +112,7 @@ export default function Chat() {
                                                                   setConversationId(item.conversationId);
                                                                   chargerConversation(item.conversationId);
                                                             }}
-                                                            className={`block w-full px-2 py-1 rounded-md truncate transition duration-100
+                                                            className={`block w-full px-2 py-1 rounded-md truncate text-left transition duration-100
             ${active ? "bg-[#3EE4F0] text-black font-semibold shadow-md" : "text-black hover:bg-[#233444] hover:text-white"}
           `}
                                                       >
