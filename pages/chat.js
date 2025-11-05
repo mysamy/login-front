@@ -6,7 +6,10 @@ export default function Chat() {
       const [token, setToken] = useState(null);
       const [history, setHistory] = useState([]);
       const [conversationId, setConversationId] = useState(() => crypto.randomUUID());
+      const currDate = new Date(msg.createdAt).toDateString();
+      const prevDate = index > 0 ? new Date(messages[index - 1].createdAt).toDateString() : null;
 
+      const showDate = currDate !== prevDate;
       useEffect(() => {
             //apres que la page s'affiche fais ca
             const savedToken = localStorage.getItem("token");
@@ -63,9 +66,9 @@ export default function Chat() {
       }
       return (
             <main className="flex min-h-screen bg-[#1A2A3A] text-white">
-                  <aside className="w-1/6 border-r border-gray-300 p-4 bg-white">
+                  <aside className="flex flex-col w-1/6  p-4 bg-[#1A2A3A]">
                         <button
-                              className="w-full mb-3 px-3 py-2 bg-[#3EE4F0] text-black rounded  hover:bg-blue-700 transition"
+                              className="rounded-full text-lg font-bold my-2 px-[8px] py-[15px] bg-[#3EE4F0] text-black border-2 border-[#3EE4F0] hover:bg-[#1A2A3A] hover:text-[#3EE4F0] transition-all duration-300"
                               onClick={() => {
                                     setConversationId(crypto.randomUUID());
                                     setMessages([]);
@@ -76,7 +79,7 @@ export default function Chat() {
 
                         <h2 className="text-xl font-semibold mb-4 text-center">Historique</h2>
 
-                        <div className="flex-1 bg-white rounded-md shadow-inner p-4 overflow-y-auto flex flex-col">
+                        <div className="flex-1 bg-[#EBE9E9] rounded-md shadow-inner p-4 overflow-y-auto flex flex-col ">
                               <ul className="flex flex-1 flex-col gap-0.5">
                                     {history.map((item) => (
                                           <li key={item.conversationId}>
@@ -99,18 +102,44 @@ export default function Chat() {
                   <section className="flex-1 p-6 flex flex-col">
                         <h2 className="text-xl font-semibold mb-4 text-center">Conversation avec {"l'IA"}</h2>
 
-                        <div className="flex flex-col flex-1 bg-white rounded-md shadow-inner p-4 overflow-y-auto">
-                              <ul className="flex flex-1 flex-col">
+                        <div className="flex flex-col flex-1 bg-[#EBE9E9] rounded-md shadow-inner p-4 overflow-y-auto">
+                              <ul className="flex flex-1 flex-col gap-5">
+                                    {showDate && (
+                                          <div className="flex items-center my-4 text-xs text-gray-300">
+                                                <div className="flex-1 border-t border-gray-500"></div>
+                                                <span className="px-2">{currDate}</span>
+                                                <div className="flex-1 border-t border-gray-500"></div>
+                                          </div>
+                                    )}
                                     {messages.map((msg, index) => (
                                           <li
-                                                key={index}
-                                                className={`w-auto line-height-[1.5] px-3 py-2 rounded-lg ${
-                                                      msg.role === "user" ? "self-start bg-[#3EE4F0] text-black" : "self-end bg-gray-200 text-black"
+                                                key={index} //changer index pour un id pour chaque message peut etre
+                                                className={`w-auto line-height-[1.5] px-3 max-w-[75%] py-2 rounded-lg ${
+                                                      msg.role === "user" ? "self-start bg-[#1FB7C4] text-white" : "self-end bg-[#14202E] text-black "
                                                 }`}
                                           >
                                                 {msg.text}
+                                                <div className="text-xs opacity-60 mt-1 text-right">
+                                                      {new Date(msg.createdAt).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})}
+                                                </div>
                                           </li>
                                     ))}
+                                    <li className="w-auto  line-height-[1.5] max-w-[75%] px-5 py-3 rounded-lg self-start bg-[#1FB7C4] text-white">
+                                          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas sapiente velit autem quod aliquid debitis
+                                          temporibus cum rerum, voluptate veritatis quisquam et? Repellendus cum dolores soluta tenetur nihil
+                                          repudiandae non!
+                                          <div class="text-xs opacity-60 mt-1 text-right">14:32</div>
+                                    </li>
+                                    <li className="w-auto line-height-[1.5] max-w-[75%] px-5 py-2 rounded-lg self-end bg-[#14202E] text-white">
+                                          Lorem ipsum dolor sit amet consectetur adipisicing elit. Quas sapiente velit autem quod aliquid debitis
+                                          temporibus cum rerum, voluptate veritatis quisquam et? Repellendus cum dolores soluta tenetur nihil
+                                          repudiandae non!
+                                    </li>
+                                    <div class="flex items-center my-4 text-xs text-gray-400">
+                                          <div class="flex-1 border-t border-gray-500"></div>
+                                          <span class="px-2">4 Nov 2025</span>
+                                          <div class="flex-1 border-t border-gray-500"></div>
+                                    </div>
                               </ul>
                         </div>
 
@@ -119,10 +148,13 @@ export default function Chat() {
                                     value={input}
                                     type="text"
                                     placeholder="Écris ton message..."
-                                    className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    className="flex-1 border-3 border-white rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-[#3EE4F0]"
                                     onChange={(e) => setInput(e.target.value)}
                               />
-                              <button type="submit" className="bg-[#3EE4F0] text-black px-4 py-2 rounded-md hover:bg-blue-700 transition">
+                              <button
+                                    type="submit"
+                                    className="rounded-full text-lg font-bold  px-[30px] py-[15px] bg-[#3EE4F0] text-black border-2 border-[#3EE4F0] hover:bg-[#1A2A3A] hover:text-[#3EE4F0] transition-all duration-300"
+                              >
                                     Envoyer
                               </button>
                         </form>
