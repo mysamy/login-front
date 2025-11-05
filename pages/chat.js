@@ -89,24 +89,29 @@ export default function Chat() {
                               Nouvelle conversation
                         </button>
 
-                        <h2 className="text-xl font-semibold mb-4 text-center">Historique</h2>
+                        <h2 className="text-xl font-semibold my-4 text-center">Historique</h2>
 
                         <div className="flex-1 bg-[#EBE9E9] rounded-md shadow-inner p-4 overflow-y-auto flex flex-col ">
                               <ul className="flex flex-1 flex-col gap-0.5">
-                                    {history.map((item) => (
-                                          <li key={item.conversationId}>
-                                                <a
-                                                      href="#"
-                                                      onClick={() => {
-                                                            setConversationId(item.conversationId);
-                                                            chargerConversation(item.conversationId);
-                                                      }}
-                                                      className="block truncate text-blue-600 hover:underline"
-                                                >
-                                                      {item.title}
-                                                </a>
-                                          </li>
-                                    ))}
+                                    {history.map((item) => {
+                                          const active = item.conversationId === conversationId;
+                                          return (
+                                                <li key={item.conversationId}>
+                                                      <a
+                                                            href="#"
+                                                            onClick={() => {
+                                                                  setConversationId(item.conversationId);
+                                                                  chargerConversation(item.conversationId);
+                                                            }}
+                                                            className={`w-full text-left px-2 py-1 rounded-md truncate transition
+            ${active ? "bg-[#3EE4F0] text-black font-semibold shadow-md" : "text-blue-400 hover:bg-[#233444] hover:text-white"}
+          `}
+                                                      >
+                                                            {item.title}
+                                                      </a>
+                                                </li>
+                                          );
+                                    })}
                               </ul>
                         </div>
                   </aside>
@@ -119,10 +124,10 @@ export default function Chat() {
                                     {messages.map((msg, index) => (
                                           <>
                                                 {msg.createdAt && shouldShowDate(messages, index) && (
-                                                      <div className="flex items-center my-4 text-xs text-gray-300">
-                                                            <div className="flex-1 border-t border-gray-500"></div>
+                                                      <div className="flex items-center my-4 text-xs text-black">
+                                                            <div className="flex-1 border-t border-black"></div>
                                                             <span className="px-2">{new Date(msg.createdAt).toDateString()}</span>
-                                                            <div className="flex-1 border-t border-gray-500"></div>
+                                                            <div className="flex-1 border-t border-black"></div>
                                                       </div>
                                                 )}
 
@@ -135,7 +140,7 @@ export default function Chat() {
                                                 >
                                                       {msg.text}
                                                       <div className="text-xs opacity-60 mt-1 text-right">
-                                                            {new Date(msg.createdAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}
+                                                            {new Date(msg.createdAt).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})}
                                                       </div>
                                                 </li>
                                           </>
