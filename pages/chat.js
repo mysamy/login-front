@@ -105,7 +105,7 @@ export default function Chat() {
                         <div className="flex flex-col flex-1 bg-[#EBE9E9] rounded-md shadow-inner p-4 overflow-y-auto">
                               <ul className="flex flex-1 flex-col gap-5">
                                     {messages.map((msg, index) => (
-                                          <React.Fragment key={msg.createdAt}>
+                                          <>
                                                 {shouldShowDate(messages, index) && (
                                                       <div className="flex items-center my-4 text-xs text-gray-300">
                                                             <div className="flex-1 border-t border-gray-500"></div>
@@ -126,7 +126,7 @@ export default function Chat() {
                                                             {new Date(msg.createdAt).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})}
                                                       </div>
                                                 </li>
-                                          </React.Fragment>
+                                          </>
                                     ))}
                               </ul>
                         </div>
