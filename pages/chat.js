@@ -62,10 +62,10 @@ export default function Chat() {
             setMessages(data); // important: on remplace, on n'ajoute pas
       }
       return (
-            <main className="flex min-h-screen bg-gray-100 text-black">
+            <main className="flex min-h-screen bg-[#1A2A3A] text-white">
                   <aside className="w-1/6 border-r border-gray-300 p-4 bg-white">
                         <button
-                              className="w-full mb-3 px-3 py-2 bg-blue-600 text-white rounded"
+                              className="w-full mb-3 px-3 py-2 bg-[#3EE4F0] text-black rounded  hover:bg-blue-700 transition"
                               onClick={() => {
                                     setConversationId(crypto.randomUUID());
                                     setMessages([]);
@@ -105,7 +105,7 @@ export default function Chat() {
                                           <li
                                                 key={index}
                                                 className={`w-auto line-height-[1.5] px-3 py-2 rounded-lg ${
-                                                      msg.role === "user" ? "self-start bg-blue-500 text-white" : "self-end bg-gray-200 text-black"
+                                                      msg.role === "user" ? "self-start bg-[#3EE4F0] text-black" : "self-end bg-gray-200 text-black"
                                                 }`}
                                           >
                                                 {msg.text}
@@ -122,7 +122,7 @@ export default function Chat() {
                                     className="flex-1 border border-gray-300 rounded-md px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
                                     onChange={(e) => setInput(e.target.value)}
                               />
-                              <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition">
+                              <button type="submit" className="bg-[#3EE4F0] text-black px-4 py-2 rounded-md hover:bg-blue-700 transition">
                                     Envoyer
                               </button>
                         </form>
