@@ -2,25 +2,18 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 
 export default function Login() {
-  const router = useRouter();
-      return (
-            <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-black">
-                  <div className="bg-white p-8 rounded-2xl shadow-md w-80">
-                        <h1 className="text-2xl font-semibold text-center mb-6">Connexion</h1>
-                        <form
-                              className="flex flex-col gap-4"
-                              onSubmit={async (e) => {
+      const router = useRouter();
+      
+        const getLogin = async(e) => {
                                     e.preventDefault(); 
-
                                     const email = e.target[0].value;
                                     const password = e.target[1].value;
-                                    console.log(process.env.NEXT_PUBLIC_BACKEND_URL);
-                                    console.log("URL du backend utilisée :", `${process.env.NEXT_PUBLIC_BACKEND_URL}/login`);
                                     const baseUrl = process.env.NEXT_PUBLIC_BACKEND_URL.replace(/\/$/, "");
 
                                     try {
                                           const res = await fetch(`${baseUrl}/login`, {
                                                 method: "POST",
+                                                credentials: "include",
                                                 headers: {"Content-Type": "application/json"},
                                                 body: JSON.stringify({email, password}),
                                           });
@@ -28,7 +21,6 @@ export default function Login() {
                                           const data = await res.json();
                                           if (res.ok) {
                                         
-                                                localStorage.setItem("token", data.token);
                                            router.push("/chat"); 
                                                 
                                           } else {
@@ -38,7 +30,14 @@ export default function Login() {
                                           console.error("Erreur :", error);
                                           alert("Erreur lors de la connexion");
                                     }
-                              }}
+      };
+      return (
+            <main className="flex flex-col items-center justify-center min-h-screen bg-gray-100 text-black">
+                  <div className="bg-white p-8 rounded-2xl shadow-md w-80">
+                        <h1 className="text-2xl font-semibold text-center mb-6">Connexion</h1>
+                        <form
+                              className="flex flex-col gap-4"
+                              onSubmit={getLogin}
                         >
                               <input
                                     type="email"

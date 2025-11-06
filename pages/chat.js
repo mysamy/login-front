@@ -1,46 +1,42 @@
 import {useState, useEffect, Fragment} from "react";
-import { useRouter } from "next/router";
+import {useRouter} from "next/router";
 
 export default function Chat() {
       const [messages, setMessages] = useState([]);
       const [input, setInput] = useState("");
-      const [token, setToken] = useState(null);
       const [history, setHistory] = useState([]);
       const [conversationId, setConversationId] = useState(() => crypto.randomUUID());
       const router = useRouter();
       useEffect(() => {
-            //apres que la page s'affiche fais ca
-            const savedToken = localStorage.getItem("token");
-            if (!savedToken) {
-                  router.push("/login"); // redirige vers login
-                  return;
-            }
-            setToken(savedToken); // met à jour le state une fois le composant monté
-      }, []); //une fois []
+            fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/me`, {
+                  credentials: "include",
+            }).then((res) => {
+                  if (!res.ok) router.push("/");
+            });
+      }, []);
       useEffect(() => {
-            if (!token) return;
 
             fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/history`, {
-                  headers: {Authorization: `Bearer ${token}`},
+                   credentials: "include",
             })
                   .then((res) => res.json())
                   .then((data) => {
                         setHistory(data);
                   })
                   .catch(console.error);
-      }, [token]);
-      function shouldShowDate(messages, index) {
+      }, []);
+      const shouldShowDate = (messages, index) => {
             if (index === 0) return true;
 
             return new Date(messages[index]?.createdAt).toDateString() !== new Date(messages[index - 1]?.createdAt).toDateString();
-      }
-      async function handleSend(e) {
+      };
+      const handleSend = async (e) => {
             e.preventDefault();
             if (!input.trim()) return; // vérifie que c’est pas vide
             setMessages([
                   ...messages,
                   {
-                        id: crypto.randomUUID(), 
+                        id: crypto.randomUUID(),
                         role: "user",
                         text: input,
                         createdAt: new Date().toISOString(),
@@ -51,8 +47,9 @@ export default function Chat() {
                   method: "POST",
                   headers: {
                         "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`,
+                        
                   },
+                  credentials: "include",
                   body: JSON.stringify({
                         message: input,
                         conversationId,
@@ -65,27 +62,27 @@ export default function Chat() {
             setMessages((prev) => [
                   ...prev,
                   {
-                  id: crypto.randomUUID(),
-                  role: "assistant",
-                  text: data.reply,
-                  createdAt: new Date().toISOString()
-                  }
+                        id: crypto.randomUUID(),
+                        role: "assistant",
+                        text: data.reply,
+                        createdAt: new Date().toISOString(),
+                  },
             ]);
             const newHistory = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/history`, {
-                  headers: {Authorization: `Bearer ${token}`},
+                  credentials: "include",
             }).then((res) => res.json());
 
             setHistory(newHistory);
-      }
+      };
 
-      async function chargerConversation(id) {
+      const chargerConversation = async (id) => {
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/conversation/${id}`, {
-                  headers: {Authorization: `Bearer ${token}`},
+                 credentials: "include",
             });
 
             const data = await res.json();
             setMessages(data); // important: on remplace, on n'ajoute pas
-      }
+      };
       return (
             <main className="flex min-h-screen bg-[#1A2A3A] text-white">
                   <aside className="flex flex-col w-1/6  p-4 bg-[#1A2A3A]">
@@ -128,15 +125,31 @@ export default function Chat() {
                   <section className="flex-1 p-6 flex flex-col">
                         <h2 className="text-xl font-semibold mb-4 text-center">Conversation avec {"l'IA"}</h2>
 
-                        <div className="flex flex-col flex-1 bg-[#EBE9E9] rounded-md shadow-inner p-4 overflow-y-auto">
+                        <div className="flex flex-col flex-1 bg-[#EBE9E9] rounded-md shadow-inner p-4 overflow-y-auto relative">
+                              <div className="absolute top-2 left w-40">
+                                    <select
+                                          id="techno"
+                                          name="techno"
+                                          className="appearance-none mt-1  block w-full bg-[#14202E] text-white px-3 py-2 rounded-md border border-[#3EE4F0] focus:outline-none focus:ring-2 focus:ring-[#3EE4F0] cursor-pointer"
+                                    >
+                                          <option value="">Techno...</option>
+                                          <option value="react">React</option>
+                                          <option value="symfony">Symfony</option>
+                                          <option value="next">Next.js</option>
+                                          <option value="node">Node.js</option>
+                                          <option value="worpress">Wordpress</option>
+                                          <option value="vue">Vue.js</option>
+                                    </select>
+                                    <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#3EE4F0]">▼</span>
+                              </div>
                               <ul className="flex flex-1 flex-col gap-6">
                                     {messages.map((msg, index) => (
                                           <Fragment key={msg.id}>
                                                 {msg.createdAt && shouldShowDate(messages, index) && (
-                                                      <div className="flex items-center my-4 text-xs text-black">
-                                                            <div className="flex-1 border-t border-black"></div>
+                                                      <div className="flex justify-center items-center my-4 text-xs text-black">
+                                                            <div className="w-1/4 border-t border-black"></div>
                                                             <span className="px-2">{new Date(msg.createdAt).toDateString()}</span>
-                                                            <div className="flex-1 border-t border-black"></div>
+                                                            <div className="w-1/4 border-t border-black"></div>
                                                       </div>
                                                 )}
 
