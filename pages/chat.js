@@ -15,9 +15,8 @@ export default function Chat() {
             });
       }, []);
       useEffect(() => {
-
             fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/history`, {
-                   credentials: "include",
+                  credentials: "include",
             })
                   .then((res) => res.json())
                   .then((data) => {
@@ -47,7 +46,6 @@ export default function Chat() {
                   method: "POST",
                   headers: {
                         "Content-Type": "application/json",
-                        
                   },
                   credentials: "include",
                   body: JSON.stringify({
@@ -77,7 +75,7 @@ export default function Chat() {
 
       const chargerConversation = async (id) => {
             const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/conversation/${id}`, {
-                 credentials: "include",
+                  credentials: "include",
             });
 
             const data = await res.json();
@@ -100,24 +98,25 @@ export default function Chat() {
 
                         <div className="flex-1 bg-[#EBE9E9] rounded-md shadow-inner p-4 overflow-y-auto flex flex-col ">
                               <ul className="flex flex-1 flex-col gap-0.5">
-                                    {Array.isArray(history) && history.map((item) => {
-                                          const active = item.conversationId === conversationId;
-                                          return (
-                                                <li key={item.conversationId}>
-                                                      <button
-                                                            onClick={() => {
-                                                                  setConversationId(item.conversationId);
-                                                                  chargerConversation(item.conversationId);
-                                                            }}
-                                                            className={`block w-full px-2 py-1 rounded-md truncate text-left transition duration-100
+                                    {Array.isArray(history) &&
+                                          history.map((item) => {
+                                                const active = item.conversationId === conversationId;
+                                                return (
+                                                      <li key={item.conversationId}>
+                                                            <button
+                                                                  onClick={() => {
+                                                                        setConversationId(item.conversationId);
+                                                                        chargerConversation(item.conversationId);
+                                                                  }}
+                                                                  className={`block w-full px-2 py-1 rounded-md truncate text-left transition duration-100
             ${active ? "bg-[#3EE4F0] text-black font-semibold shadow-md" : "text-black hover:bg-[#233444] hover:text-white"}
           `}
-                                                      >
-                                                            {item.title}
-                                                      </button>
-                                                </li>
-                                          );
-                                    })}
+                                                            >
+                                                                  {item.title}
+                                                            </button>
+                                                      </li>
+                                                );
+                                          })}
                               </ul>
                         </div>
                   </aside>
@@ -144,30 +143,41 @@ export default function Chat() {
                                     <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#3EE4F0]">▼</span>
                               </div>
                               <ul className="flex flex-1 flex-col gap-6">
-                                    {Array.isArray(messages) && messages.map((msg, index) => (
-                                          <Fragment key={msg.id}>
-                                                {msg.createdAt && shouldShowDate(messages, index) && (
-                                                      <div className="flex justify-center items-center my-4 text-xs text-black">
-                                                            <div className="w-1/4 border-t border-black"></div>
-                                                            <span className="px-2">{new Date(msg.createdAt).toDateString("fr-FR")}</span>
-                                                            <div className="w-1/4 border-t border-black"></div>
-                                                      </div>
-                                                )}
+                                    {Array.isArray(messages) &&
+                                          messages.map((msg, index) => (
+                                                <Fragment key={msg.id}>
+                                                      {msg.createdAt && shouldShowDate(messages, index) && (
+                                                            <div className="flex justify-center items-center my-4 text-xs text-black">
+                                                                  <div className="w-1/4 border-t border-black"></div>
+                                                                  <span className="px-2">
+                                                                        {new Date(msg.createdAt).toDateString("fr-FR", {
+                                                                              weekday: "long",
+                                                                              day: "numeric",
+                                                                              month: "long",
+                                                                              year: "numeric",
+                                                                        })}
+                                                                  </span>
+                                                                  <div className="w-1/4 border-t border-black"></div>
+                                                            </div>
+                                                      )}
 
-                                                <li
-                                                      className={`w-auto line-height-[1.5] px-5 max-w-[75%] py-2 rounded-lg ${
-                                                            msg.role === "user"
-                                                                  ? "self-start bg-[#1FB7C4] text-white"
-                                                                  : "self-end bg-[#14202E] text-white"
-                                                      }`}
-                                                >
-                                                      {msg.text}
-                                                      <div className="text-xs opacity-60 text-right">
-                                                            {new Date(msg.createdAt).toLocaleTimeString([], {hour: "2-digit", minute: "2-digit"})}
-                                                      </div>
-                                                </li>
-                                          </Fragment>
-                                    ))}
+                                                      <li
+                                                            className={`w-auto line-height-[1.5] px-5 max-w-[75%] py-2 rounded-lg ${
+                                                                  msg.role === "user"
+                                                                        ? "self-start bg-[#1FB7C4] text-white"
+                                                                        : "self-end bg-[#14202E] text-white"
+                                                            }`}
+                                                      >
+                                                            {msg.text}
+                                                            <div className="text-xs opacity-60 text-right">
+                                                                  {new Date(msg.createdAt).toLocaleTimeString([], {
+                                                                        hour: "2-digit",
+                                                                        minute: "2-digit",
+                                                                  })}
+                                                            </div>
+                                                      </li>
+                                                </Fragment>
+                                          ))}
                               </ul>
                         </div>
 
