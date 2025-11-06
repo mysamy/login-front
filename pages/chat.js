@@ -100,7 +100,7 @@ export default function Chat() {
 
                         <div className="flex-1 bg-[#EBE9E9] rounded-md shadow-inner p-4 overflow-y-auto flex flex-col ">
                               <ul className="flex flex-1 flex-col gap-0.5">
-                                    {history.map((item) => {
+                                    {Array.isArray(history) && history.map((item) => {
                                           const active = item.conversationId === conversationId;
                                           return (
                                                 <li key={item.conversationId}>
@@ -143,7 +143,7 @@ export default function Chat() {
                                     <span className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-[#3EE4F0]">▼</span>
                               </div>
                               <ul className="flex flex-1 flex-col gap-6">
-                                    {messages.map((msg, index) => (
+                                    {Array.isArray(messages) && messages.map((msg, index) => (
                                           <Fragment key={msg.id}>
                                                 {msg.createdAt && shouldShowDate(messages, index) && (
                                                       <div className="flex justify-center items-center my-4 text-xs text-black">
