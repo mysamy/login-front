@@ -7,15 +7,18 @@ export default function Chat() {
       const [history, setHistory] = useState([]);
       const [conversationId, setConversationId] = useState(() => crypto.randomUUID());
       const router = useRouter();
+
+      console.log(process.env.NEXT_PUBLIC_BACKEND_URL);
+      
       useEffect(() => {
-            fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/me`, {
+            fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}me`, {
                   credentials: "include",
             }).then((res) => {
                   if (!res.ok) router.push("/");
             });
       }, []);
       useEffect(() => {
-            fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/history`, {
+            fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}history`, {
                   credentials: "include",
             })
                   .then((res) => res.json())
@@ -83,7 +86,7 @@ export default function Chat() {
       };
       return (
             <main className="flex min-h-screen bg-[#1A2A3A] text-white">
-                  <aside className="flex flex-col w-1/6  p-4 bg-[#1A2A3A]">
+                  <aside className="flex flex-col w-1/6 md:p-2 p-4 sm:pr-0 bg-[#1A2A3A]">
                         <button
                               className="rounded-full text-sm font-bold my-2 px-[8px] py-[15px] bg-[#3EE4F0] text-black border-2 border-[#3EE4F0] hover:bg-[#1A2A3A] hover:text-[#3EE4F0] transition-all duration-300"
                               onClick={() => {
@@ -96,7 +99,7 @@ export default function Chat() {
 
                         <h2 className="text-xl font-semibold my-4 text-center">Historique</h2>
 
-                        <div className="flex-1 bg-[#EBE9E9] rounded-md shadow-inner p-4 overflow-y-auto flex flex-col ">
+                        <div className="flex-1 bg-[#EBE9E9] rounded-md shadow-inner p-2 lg:p-4 overflow-y-auto flex flex-col ">
                               <ul className="flex flex-1 flex-col gap-0.5">
                                     {Array.isArray(history) &&
                                           history.map((item) => {
@@ -121,15 +124,15 @@ export default function Chat() {
                         </div>
                   </aside>
 
-                  <section className="flex-1 p-6 flex flex-col">
+                  <section className="flex-1 p-6 flex flex-col md:p-2">
                         <h2 className="text-xl font-semibold mb-4 text-center">Conversation avec {"l'IA"}</h2>
 
                         <div className="flex flex-col flex-1 bg-[#EBE9E9] rounded-md shadow-inner p-4 overflow-y-auto relative">
-                              <div className="absolute top-2 left w-40">
+                              <div className="absolute top-2 left ">
                                     <select
                                           id="techno"
                                           name="techno"
-                                          className="appearance-none mt-1  block w-full bg-[#14202E] text-white px-3 py-2 rounded-md border border-[#3EE4F0] focus:outline-none focus:ring-2 focus:ring-[#3EE4F0] cursor-pointer"
+                                          className="appearance-none mt-1  block bg-[#14202E] text-white px-3 py-2 rounded-md border border-[#3EE4F0] focus:outline-none focus:ring-2 focus:ring-[#3EE4F0] cursor-pointer"
                                     >
                                           <option value="">Techno...</option>
                                           <option value="react">Html</option>
@@ -148,16 +151,16 @@ export default function Chat() {
                                                 <Fragment key={msg.id}>
                                                       {msg.createdAt && shouldShowDate(messages, index) && (
                                                             <div className="flex justify-center items-center my-4 text-xs text-black">
-                                                                  <div className="w-1/4 border-t border-black"></div>
+                                                                  <div className="w-1/6 xl:w-1/4 border-t border-black"></div>
                                                                   <span className="px-2">
                                                                         {new Date(msg.createdAt).toLocaleDateString("fr-FR")}
                                                                   </span>
-                                                                  <div className="w-1/4 border-t border-black"></div>
+                                                                  <div className="w-1/6 xl:w-1/4 border-t border-black"></div>
                                                             </div>
                                                       )}
 
                                                       <li
-                                                            className={`w-auto line-height-[1.5] px-5 max-w-[75%] py-2 rounded-lg ${
+                                                            className={`w-auto line-height-[1.5] px-5 max-w-[85%] py-2 rounded-lg ${
                                                                   msg.role === "user"
                                                                         ? "self-start bg-[#1FB7C4] text-white"
                                                                         : "self-end bg-[#14202E] text-white"
