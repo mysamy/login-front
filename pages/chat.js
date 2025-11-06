@@ -133,6 +133,7 @@ export default function Chat() {
                                           className="appearance-none mt-1  block w-full bg-[#14202E] text-white px-3 py-2 rounded-md border border-[#3EE4F0] focus:outline-none focus:ring-2 focus:ring-[#3EE4F0] cursor-pointer"
                                     >
                                           <option value="">Techno...</option>
+                                          <option value="react">Html</option>
                                           <option value="react">React</option>
                                           <option value="symfony">Symfony</option>
                                           <option value="next">Next.js</option>
@@ -148,7 +149,7 @@ export default function Chat() {
                                                 {msg.createdAt && shouldShowDate(messages, index) && (
                                                       <div className="flex justify-center items-center my-4 text-xs text-black">
                                                             <div className="w-1/4 border-t border-black"></div>
-                                                            <span className="px-2">{new Date(msg.createdAt).toDateString()}</span>
+                                                            <span className="px-2">{new Date(msg.createdAt).toDateString("fr-FR")}</span>
                                                             <div className="w-1/4 border-t border-black"></div>
                                                       </div>
                                                 )}
