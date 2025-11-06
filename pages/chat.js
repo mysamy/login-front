@@ -150,12 +150,7 @@ export default function Chat() {
                                                             <div className="flex justify-center items-center my-4 text-xs text-black">
                                                                   <div className="w-1/4 border-t border-black"></div>
                                                                   <span className="px-2">
-                                                                        {new Date(msg.createdAt).toDateString("fr-FR", {
-                                                                              weekday: "long",
-                                                                              day: "numeric",
-                                                                              month: "long",
-                                                                              year: "numeric",
-                                                                        })}
+                                                                        {new Date(msg.createdAt).toLocaleDateString("fr-FR")}
                                                                   </span>
                                                                   <div className="w-1/4 border-t border-black"></div>
                                                             </div>
